@@ -1,0 +1,58 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+<div class="jumbotron jumbotron-fluid text-center bg-light">
+    <div class="container">
+        <h1 class="display-4">Welcome to Fantasy League</h1>
+        <p class="lead">Experience the thrill of managing your own fantasy football team.</p>
+        <a href="{% url 'accounts:register' %}" class="btn btn-primary btn-lg">Join Now</a>
+    </div>
+</div>
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-4 text-center">
+            <img src="https://images.freeimages.com/images/large-previews/dfc/soccer-ball-1466760.jpg?fmt=webp&w=500" alt="Feature 1" class="img-fluid rounded">
+            <h3 class="mt-3">Build Your Team</h3>
+            <p>Create your dream team with players from real-world leagues.</p>
+        </div>
+        <div class="col-md-4 text-center">
+            <img src="https://thumbs.dreamstime.com/b/football-soccer-ball-kickoff-game-sunset-38302251.jpg" alt="Feature 2" class="img-fluid rounded">
+            <h3 class="mt-3">Compete with Friends</h3>
+            <p>Challenge your friends and other players in weekly matches.</p>
+        </div>
+        <div class="col-md-4 text-center">
+            <img src="https://thumbs.dreamstime.com/b/football-soccer-ball-kickoff-game-sunset-38302251.jpg" alt="Feature 3" class="img-fluid rounded">
+            <h3 class="mt-3">Win Rewards</h3>
+            <p>Win matches and climb the leaderboard to earn exciting rewards.</p>
+        </div>
+    </div>
+</div>
+
+<div class="text-center bg-dark text-white py-5">
+    <div class="container">
+        <h2>Ready to Start Your Fantasy League Journey?</h2>
+        <p>Sign up now and embark on an exciting football adventure.</p>
+        <a href="{% url 'accounts:register' %}" class="btn btn-outline-light btn-lg">Get Started</a>
+    </div>
+</div>
+
+<div class="container my-5">
+    <h2 class="text-center mb-4">Latest News</h2>
+    <div class="row">
+        <!-- News Item -->
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <img src="https://st3.depositphotos.com/1000423/16437/i/450/depositphotos_164375318-stock-photo-soccer-best-moments-mixed-media.jpg" class="card-img-top" alt="News 1">
+                <div class="card-body">
+                    <h5 class="card-title">News Title 1</h5>
+                    <p class="card-text">Some quick example text to build on the news title and make up the bulk of the card's content.</p>
+                    <a href="#" class="btn btn-primary">Read More</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

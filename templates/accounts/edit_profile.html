@@ -1,0 +1,81 @@
+{% extends 'layouts/base.html' %}
+
+{% load static %}
+
+{% block content %}
+<!-- Main Content -->
+<div class="main-content pt-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <form action="{% url 'accounts:edit_profile' %}" method="post" enctype="multipart/form-data" class="card">
+                    {% csrf_token %}
+                    <div class="card-header">
+                        <h4>Edit Profile</h4>
+                    </div>
+                    <div class="card-body">
+
+                        <!-- Profile Picture -->
+                        <div class="form-group text-center">
+                            <img src="{{ current_profile.title_photo }}" alt="" class="profile-avatar img-fluid rounded-circle mb-3" style="width: 150px; height: 150px;">
+                            <input type="file" name="profile_picture" id="profileFile" hidden>
+                            <button type="button" class="btn btn-outline-secondary change-profile">Change Picture</button>
+                        </div>
+
+                        <!-- Full Name -->
+                        <div class="form-group">
+                            <label for="fullName">Full Name</label>
+                            <input type="text" class="form-control" id="fullName" name="full_name" placeholder="Full Name" value="{{ current_profile.full_name }}">
+                        </div>
+
+                        <!-- Email -->
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Type your email" value="{{ current_profile.get_email }}">
+                        </div>
+
+                        <!-- Password -->
+                        <h5 class="mt-4">Change Password</h5>
+                        <div class="form-group">
+                            <label for="password">New Password</label>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Enter new password">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm New Password</label>
+                            <input type="password" class="form-control" id="confirmPassword" name="confirm_password" placeholder="Enter new password again">
+                        </div>
+
+                    </div>
+                    <div class="card-footer text-right">
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Main Content -->
+{% endblock content %}
+
+{% block script %}
+<script>
+    $(document).ready(function () {
+        // Profile picture change
+        $('.change-profile').click(function () {
+            $('#profileFile').click();
+        });
+
+        $('#profileFile').change(function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    $('.profile-avatar').attr('src', e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    });
+</script>
+{% endblock script %}

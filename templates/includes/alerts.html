@@ -1,0 +1,256 @@
+{% if messages or success_msg %}
+    <style>
+        .notification__wrapper {
+            position: fixed;
+            top: 70px;
+            right: 30px;
+            z-index: 11111;
+        }
+
+        .notification__wrapper ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .notification__box {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, .2);
+            border-radius: 4px;
+            max-width: 400px;
+            width: 400px;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateX(120%);
+            transition: all .3s ease-in-out;
+            background-color: #fff;
+            z-index: 11111;
+        }
+
+        .notification__box.active {
+            opacity: 1;
+            transform: translateX(0%);
+        }
+
+        .notification__icon img {
+            width: 25px;
+            height: auto;
+        }
+
+        .notification__para {
+            margin-bottom: 0px;
+            color: #0C0B04;
+            font-size: 15px;
+            font-weight: 400;
+            line-height: 1.3;
+            margin-right: 20px;
+        }
+
+        .notification__green {
+            background-color: #EBFBF6;
+        }
+
+        .notification__red {
+            background-color: #FDEDEE;
+        }
+
+        .notification__yellow {
+            background-color: #FFF9E9;
+        }
+
+        .notification__blue {
+            background-color: #E6FAFD;
+        }
+
+        .notification__close {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            right: 20px;
+            font-size: 15px;
+            font-weight: 500;
+            display: flex;
+            color: #ccc;
+            transition: all .2s ease-in-out;
+            cursor: pointer;
+        }
+
+        .notification__close:hover {
+            color: #0C0B04;
+        }
+
+        .notification__green .notification__close:hover {
+            color: #35D29D;
+        }
+
+        .notification__red .notification__close:hover {
+            color: #F04D62;
+        }
+
+        .notification__yellow .notification__close:hover {
+            color: #FFC12B;
+        }
+
+        .notification__blue .notification__close:hover {
+            color: #01D0EA;
+        }
+
+        .notification__icon-rotate {
+            transform: rotate(180deg);
+        }
+
+        .notification__progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            width: 100%;
+        }
+
+        .notification__progress:before {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            right: 100%;
+            height: 100%;
+            width: 100%;
+            background-color: #4070f4;
+        }
+
+        .notification__green .notification__progress:before {
+            background-color: #35D29D;
+        }
+
+        .notification__red .notification__progress:before {
+            background-color: #F04D62;
+        }
+
+        .notification__yellow .notification__progress:before {
+            background-color: #FFC12B;
+        }
+
+        .notification__blue .notification__progress:before {
+            background-color: #01D0EA;
+        }
+
+
+        .notification__progress.active:before {
+            animation: progress 4s linear forwards;
+        }
+
+        @keyframes progress {
+            0% {
+                right: 0;
+            }
+
+            100% {
+                right: 100%;
+            }
+        }
+    </style>
+    <!--notification-wrapper-->
+
+
+<body class="menubar-hoverable header-fixed menubar-pin ">
+    <div class="notification__wrapper">
+        <ul>
+            {% if success_msg %}
+            <li>
+                <!--successfully-done-something---use-for-positive-notification-->
+                <div class="notification__box notification__green">
+                    <div class="notification__icon">
+                        <img src="https://nepalbahas.prixacdn.net/media/albums/notification_check_S5J5pJ57J4.png" alt="">
+                    </div>
+                    <p class="notification__para">{{ success_msg }}</p>
+                    <a class="notification__close"><i class="fa fa-times" aria-hidden="true"></i></a>
+                    <div class="notification__progress"></div>
+                </div>
+                <!--end-->
+            </li>
+            {% endif %}
+            {% for message in messages %}
+            {% if message.tags == 'success' %}
+            <li >
+                <div class="notification__box notification__green">
+                    <div class="notification__icon">
+                        <img src="https://nepalbahas.prixacdn.net/media/albums/notification_check_S5J5pJ57J4.png" alt="">
+                    </div>
+                    <p class="notification__para">{{message}}</p>
+                    <a class="notification__close"><i class="fa fa-times" aria-hidden="true"></i></a>
+                    <div class="notification__progress"></div>
+                </div>
+            </li>
+            {% elif message.tags == 'error' %}
+            <li >
+                <!--error-notification-and-other-related-stuff-->
+                <div class="notification__box notification__red">
+                    <div class="notification__icon notification__icon-rotate">
+                        <img src="https://nepalbahas.prixacdn.net/media/albums/notification_red_dqstw3rfgP.png" alt="">
+                    </div>
+                    <p class="notification__para">{{message}}</p>
+                    <a class="notification__close"><i class="fa fa-times" aria-hidden="true"></i></a>
+                    <div class="notification__progress"></div>
+                </div>
+                <!--end-->
+            </li>
+            {% elif message.tags == 'warning' %}
+            <li >
+                <!--warning-notification-and-other-related-stuff-->
+                <div class="notification__box notification__yellow">
+                    <div class="notification__icon notification__icon-rotate">
+                        <img src="https://nepalbahas.prixacdn.net/media/albums/notification_yellow_P60qALiJoc.png" alt="">
+                    </div>
+                    <p class="notification__para">{{message}}</p>
+                    <a class="notification__close"><i class="fa fa-times" aria-hidden="true"></i></a>
+                    <div class="notification__progress"></div>
+                </div>
+                <!--end-->
+            </li>
+            {% elif message.tags == 'info' %}
+            <li >
+                <!--normal-notification-and-other-related-stuff-->
+                <div class="notification__box notification__blue">
+                    <div class="notification__icon ">
+                        <img src="https://nepalbahas.prixacdn.net/media/albums/notification_blue_WbeFThl7zG.png" alt="">
+                    </div>
+                    <p class="notification__para">{{message}}</p>
+                    <a class="notification__close"><i class="fa fa-times" aria-hidden="true"></i></a>
+                    <div class="notification__progress"></div>
+                </div>
+                <!--end-->
+            </li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+    <script src="https://unpkg.com/phosphor-icons"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('.notification__box').addClass('active');
+            $('.notification__progress').addClass('active');
+            var notificationBox = $('.notification__box');
+            setTimeout(() => {
+                $('.notification__box').removeClass('active');
+                $('.notification__progress').removeClass('active');
+            }, 4000);
+        });
+    </script>
+    <script>
+        $('.notification__close').click(function () {
+            $(this).parent('.notification__box').removeClass('active');
+        });
+    </script>
+
+</body>
+
+</html>
+
+{% endif %}
