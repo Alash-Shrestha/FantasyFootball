@@ -80,3 +80,15 @@ class MatchPointMapper(DateModel):
             raise ValueError("Only one instance of MatchPointMapper is allowed.")
 
         super().save(*args, **kwargs)
+
+
+
+class News(DateModel):
+    title = models.CharField(max_length=300)
+    description = models.TextField()
+    title_photo = models.ImageField(upload_to='news/images/', null=True, blank=True)
+
+    def __str__(self):
+        return self.title
+    
+    

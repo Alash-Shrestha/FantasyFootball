@@ -1,0 +1,36 @@
+{% extends 'layouts/base.html' %}
+
+
+
+{% block content %}
+<div  class="py-5 container">
+    <h1 class="mb-4"><i class="fas fa-futbol mr-2"></i>About Fantasy League</h1>
+    <p class="lead">Embark on an unparalleled football management journey. Our Fantasy League combines strategy, skill, and excitement, bringing the thrill of football to your screen.</p>
+    
+    <section class="my-5 ">
+        <h2><i class="fas fa-bullseye mr-2"></i>Our Mission</h2>
+        <p>Our mission is to create an engaging and competitive environment where football enthusiasts can test their managerial skills, make strategic decisions, and experience the ups and downs of running a football team.</p>
+    </section>
+
+    <section class="my-5">
+        <h2><i class="fas fa-thumbs-up mr-2"></i>Why Choose Our League?</h2>
+        <p>We offer a unique blend of realistic gameplay, comprehensive management, and a community of passionate football fans. Highlights include:</p>
+        <ul>
+            <li><i class="fas fa-chart-line mr-1"></i>Climb up utilizing your football knowledge.</li>
+            <li><i class="fas fa-user-friends mr-1"></i>A user-friendly platform for team management and strategy development.</li>
+            <li><i class="fas fa-trophy mr-1"></i>Rewards for season winner.</li>
+        </ul>
+    </section>
+
+    <section class="my-5">
+        <h2><i class="fas fa-users mr-2"></i>Join the Community</h2>
+        <p>Become part of a growing community of football managers. Whether you're new to fantasy sports or a seasoned pro, there's a place for you in our league.</p>
+        <a href="{% url 'accounts:register' %}" class="btn btn-primary"><i class="fas fa-sign-in-alt mr-1"></i>Join Now</a>
+    </section>
+
+    <section class="my-5">
+        <h2><i class="fas fa-graduation-cap mr-2"></i>Developed as a University Project</h2>
+        <p>This platform was crafted as a part of a university assignment, aiming to showcase innovative web development and a deep understanding of fantasy sports. It stands as a testament to the fusion of academic knowledge and real-world application.</p>
+    </section>
+</div>
+{% endblock %}

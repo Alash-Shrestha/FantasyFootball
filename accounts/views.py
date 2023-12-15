@@ -20,6 +20,9 @@ from core.mixins import CustomLoginRequiredMixin
 class HomeView(TemplateView):
     template_name = 'home.html'
 
+class AboutView(TemplateView):
+    template_name = 'about.html'
+
 
 # Registration View
 class RegistrationView(View):
