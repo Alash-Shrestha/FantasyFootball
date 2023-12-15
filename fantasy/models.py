@@ -4,6 +4,17 @@ from core.models import DateModel
 
 User = get_user_model()
 
+class MatchWeek(DateModel):
+    week = models.IntegerField(default=1)
+    sync_status = models.BooleanField(default=False)
+
+    def __str__(self):
+        return str(self.week)
+    
+    @classmethod
+    def get_active_week(cls):
+        return cls.objects.first()
+
 
 class Team(DateModel):
     name = models.CharField(max_length=255)
@@ -28,10 +39,11 @@ class FantasyTeam(DateModel):
     points = models.IntegerField(default=0)
     players = models.ManyToManyField(Player, blank=True)
 
-    def __self__(self):
+    def __str__(self):
         return f"{self.name} - {self.user.full_name}"
 
 class Match(DateModel):
+    week = models.ForeignKey(MatchWeek, null=True, blank=True, on_delete=models.CASCADE)
     home_team = models.ForeignKey(Team, related_name='home_team', on_delete=models.DO_NOTHING)
     away_team = models.ForeignKey(Team, related_name='away_team', on_delete=models.DO_NOTHING)
     home_team_score = models.IntegerField(default=0)
@@ -52,3 +64,19 @@ class MatchScore(DateModel):
 
     def __str__(self):
         return f"Match: {self.match.pk} Player: {self.player} Score: {self.score}"
+
+
+class MatchPointMapper(DateModel):
+    score_point = models.IntegerField(default=3)
+    assist_point = models.IntegerField(default=2)
+
+    def __str__(self):
+        return f"score: {self.score_point} assist: {self.assist_point}"
+    
+    def save(self, *args, **kwargs):
+        existing_instances_count = MatchPointMapper.objects.count()
+
+        if existing_instances_count > 0 and self.pk is None:
+            raise ValueError("Only one instance of MatchPointMapper is allowed.")
+
+        super().save(*args, **kwargs)

@@ -1,9 +1,8 @@
 from django.urls import path
-from . import views
-
+from .views import SyncMatchPointsView
 
 app_name = 'fantasy'
 
 urlpatterns = [
-    # path('', views.HomeView.as_view(), name='home'),
+    path('sync-match-points/', SyncMatchPointsView.as_view(), name='sync-match-points'),
 ]
