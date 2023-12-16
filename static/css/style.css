@@ -1,0 +1,155 @@
+body {
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+.full-name {
+  height: 50px;
+  width: 200px;
+  margin-left: -120%;
+}
+
+#container {
+  display: flex;
+  flex: 1;
+}
+
+#player-list {
+  width: 300px;
+  border: 1px solid #ccc;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#searchInput {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+#players-list {
+  list-style: none;
+  padding: 0;
+  max-height: 450px;
+  overflow-y: auto;
+}
+
+#players-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
+
+.add-player-btn {
+  background-color: #4caf50;
+  color: #fff;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.add-player-btn:hover {
+  background-color: #45a049;
+}
+
+#submitBtn {
+  background-color: #4caf50;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 10px;
+}
+
+#submitBtn:hover {
+  background-color: #45a049;
+}
+
+#football-field {
+  flex: 1;
+  background-color: #4caf50;
+  position: relative;
+  overflow: hidden;
+}
+
+#football-field::before {
+  content: "";
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  top: 50%;
+  left: 53%;
+  transform: translate(-50%, -50%);
+}
+
+#football-field::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background-color: #fff;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+}
+
+.goal-post {
+  position: absolute;
+  background-color: #fff;
+  width: 15%;
+  height: 2%;
+}
+
+.goal-post.left {
+  top: 0;
+  left: 42.5%;
+  transform: translateX(-50%);
+}
+
+.goal-post.right {
+  bottom: 0;
+  right: 42.5%;
+  transform: translateX(50%);
+}
+
+.player {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background-color: rgb(81, 136, 180);
+  color: #fff;
+  text-align: center;
+  line-height: 60px;
+  cursor: pointer;
+  border-radius: 50%;
+  margin: 5px;
+}
+
+.delete-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #ff5050;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}

@@ -37,22 +37,28 @@
     </div>
 </div>
 
+{% if articles %}
+
 <div class="container my-5">
-    <h2 class="text-center mb-4">Latest News</h2>
+    <h2 class="text-center mb-4">Latest Articles</h2>
     <div class="row">
         <!-- News Item -->
+        {% for article in articles %}
         <div class="col-md-4 mb-3">
             <div class="card">
-                <img src="https://st3.depositphotos.com/1000423/16437/i/450/depositphotos_164375318-stock-photo-soccer-best-moments-mixed-media.jpg" class="card-img-top" alt="News 1">
+                <img src="{{article.title_photo}}" style="max-height: 300px;" class="card-img-top" alt="{{article.title|safe}}">
                 <div class="card-body">
-                    <h5 class="card-title">News Title 1</h5>
-                    <p class="card-text">Some quick example text to build on the news title and make up the bulk of the card's content.</p>
+                    <h5 class="card-title">{{article.title|safe}}</h5>
+                    <p class="card-text">{{ article.description|truncatechars:100|safe }}
+                    </p>
                     <a href="#" class="btn btn-primary">Read More</a>
                 </div>
             </div>
         </div>
+        {% endfor %}
 
     </div>
 </div>
+{% endif %}
 
 {% endblock %}

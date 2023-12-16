@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views import View
-from .models import Match, MatchPointMapper, MatchWeek, MatchScore
+from .models import Match, MatchPointMapper, MatchWeek, MatchScore, FantasyTeam
+from django.views.generic import DetailView
 
 class SyncMatchPointsView(View):
 
@@ -24,8 +25,10 @@ class SyncMatchPointsView(View):
 
         return JsonResponse({'message': 'Match points synced successfully'})
 
+
     def process_match(self, match, point_mapper):
         victory_team = match.home_team if match.home_team_score > match.away_team_score else match.away_team
+        processed_players = set()
 
         for player in victory_team.player_set.all():
             self.update_fantasy_team_points(player, 1)
@@ -34,10 +37,17 @@ class SyncMatchPointsView(View):
         for scorer in match.scorers.all():
             self.update_fantasy_team_points(scorer, point_mapper.score_point)
             self.update_match_score(match, scorer, point_mapper.score_point)
+            processed_players.add(scorer)
 
         for assistant in match.assists.all():
             self.update_fantasy_team_points(assistant, point_mapper.assist_point)
             self.update_match_score(match, assistant, point_mapper.assist_point)
+            processed_players.add(assistant)
+
+        all_players = set(match.home_team.player_set.all()) | set(match.away_team.player_set.all())
+        zero_point_players = all_players - processed_players
+        for player in zero_point_players:
+            self.update_match_score(match, player, 0)
 
     def update_fantasy_team_points(self, player, points):
         for fantasy_team in player.fantasyteam_set.all():
@@ -48,3 +58,9 @@ class SyncMatchPointsView(View):
         match_score, created = MatchScore.objects.get_or_create(match=match, player=player)
         match_score.score += points
         match_score.save()
+
+
+class MyTeamView(DetailView):
+    model = FantasyTeam
+    template_name = 'fantasy/points.html'
+

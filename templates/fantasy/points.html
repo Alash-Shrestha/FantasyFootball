@@ -1,0 +1,70 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/points.css' %}" />
+
+<style>
+    .first-child-player{
+        left: 44%;
+        
+    }
+    .player:first-child {
+  left: 44%;
+  top: 10%;
+}
+
+.player:nth-child(2) {
+  left: 15%;
+  top: 30%;
+}
+
+.player:nth-child(3) {
+  left: 75%;
+  top: 30%;
+}
+
+.player:nth-child(4) {
+  left: 44%;
+  top: 55%;
+}
+
+.player:nth-child(5) {
+  left: 44%;
+  top: 80%;
+}
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+
+    <div class="container" id="container">
+      <div id="football-field">
+        <div class="total-points" style="left: 13%; top: 15%">
+          <span>Overall Points : {{object.points}}</span>
+        </div>
+
+        {% for player, points in object.player_and_points.items %}
+        <div class="player {% if forloop.last %}first-child-player{% endif %}"  >
+          <div class="player-avatar"></div>
+          <div class="player-detail">
+            <div class="player-points">{{points}}</div>
+            <div class="player-fullname">{{player}}</div>
+          </div>
+        </div>
+        {% endfor %}
+
+      </div>
+    </div>
+
+   
+
+
+{% endblock content %}
+
+
+{% block script %}
+<script src="{% static 'js/points.js' %}"></script>
+
+{% endblock %}

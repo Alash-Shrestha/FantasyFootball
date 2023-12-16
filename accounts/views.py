@@ -1,3 +1,4 @@
+from typing import Any
 from django.views import View
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required
@@ -13,12 +14,18 @@ from .models import Account
 import requests
 from .forms import *
 from django.views.generic.base import TemplateView
+from fantasy.models import Article
 
 from core.mixins import CustomLoginRequiredMixin
 
 
 class HomeView(TemplateView):
     template_name = 'home.html'
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['articles'] = Article.objects.all()[:3] if Article.objects.exists() else None
+        return context
 
 class AboutView(TemplateView):
     template_name = 'about.html'

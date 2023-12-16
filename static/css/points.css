@@ -1,0 +1,128 @@
+body {
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  height: 170vh;
+}
+
+#container {
+  display: flex;
+  flex: 1;
+  height: 150vh;
+}
+
+#football-field {
+  flex: 1;
+  background-color: #4caf50;
+  position: relative;
+  overflow: auto;
+  height: 100%;
+}
+
+
+
+#football-field::before {
+  content: "";
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#football-field::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background-color: #fff;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+}
+
+.goal-post {
+  position: absolute;
+  background-color: #fff;
+  width: 15%;
+  height: 2%;
+}
+
+.goal-post.left {
+  top: 0;
+  left: 42.5%;
+  transform: translateX(-50%);
+}
+
+.goal-post.right {
+  bottom: 0;
+  right: 42.5%;
+  transform: translateX(50%);
+}
+
+.player {
+  position: absolute;
+  height: 150px;
+  width: 200px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+.player-avatar {
+  width: 60px;
+  height: 60px;
+  background-color: rgb(81, 136, 180);
+  color: #fff;
+  text-align: center;
+  line-height: 60px;
+  cursor: pointer;
+  border-radius: 50%;
+  margin: 5px;
+}
+
+.player-detail {
+  display: flex;
+  flex-direction: column;
+}
+.player-points {
+  background-color: rgb(45, 89, 221);
+  padding: 5px;
+  color: white;
+  font-weight: 600;
+  text-align: center;
+}
+.player-fullname {
+  background-color: rgb(0, 61, 80);
+  color: white;
+  font-weight: 600;
+  padding: 5px;
+}
+.delete-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #ff5050;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.total-points {
+  font-weight: 600;
+  color: white;
+  background-color: rgb(137, 24, 118);
+  width: 150px;
+  padding: 10px;
+  margin: 10px;
+}

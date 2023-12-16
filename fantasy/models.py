@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from core.models import DateModel
+from django.db.models import Sum
 
 User = get_user_model()
 
@@ -38,9 +39,34 @@ class FantasyTeam(DateModel):
     user = models.ForeignKey(User, null=True, blank=True, related_name='fantasyteam', on_delete=models.CASCADE)
     points = models.IntegerField(default=0)
     players = models.ManyToManyField(Player, blank=True)
+    active_week = models.ForeignKey(MatchWeek, null=True, blank=True, on_delete=models.DO_NOTHING)
 
     def __str__(self):
         return f"{self.name} - {self.user.full_name}"
+    
+    def player_and_points(self):
+        if not self.active_week:
+            return {}
+
+        team_players = self.players.all()
+        print('total players: ',team_players)
+
+        match_scores = MatchScore.objects.filter(
+            match__week=self.active_week,
+            player__in=team_players
+        )
+
+        player_points = match_scores.values(
+            'player__name'
+        ).annotate(
+            total_points=Sum('score')
+        ).order_by('player__name')
+
+        # Convert to a dictionary or a suitable format
+        player_points_dict = {item['player__name']: item['total_points'] for item in player_points}
+        print('point dict: ',player_points_dict)
+
+        return player_points_dict
 
 class Match(DateModel):
     week = models.ForeignKey(MatchWeek, null=True, blank=True, on_delete=models.CASCADE)
@@ -83,12 +109,18 @@ class MatchPointMapper(DateModel):
 
 
 
-class News(DateModel):
+class Article(DateModel):
     title = models.CharField(max_length=300)
     description = models.TextField()
-    title_photo = models.ImageField(upload_to='news/images/', null=True, blank=True)
+    image = models.ImageField(upload_to='news/images/', null=True, blank=True)
 
     def __str__(self):
         return self.title
+    
+    @property
+    def title_photo(self):
+        if self.image:
+            return self.image.url
+        return 'https://assets.gopromotional.co.uk/images/article-placeholder.jpg'
     
     
