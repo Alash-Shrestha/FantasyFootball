@@ -3,9 +3,15 @@ from django.db.models.query import QuerySet
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views import View
-from .models import Match, MatchPointMapper, MatchWeek, MatchScore, FantasyTeam, Article
-from django.views.generic import DetailView, ListView
+from .models import Match, MatchPointMapper, MatchWeek, MatchScore, FantasyTeam, Article, Player
+from django.views.generic import DetailView, ListView, CreateView
 from core.mixins import CustomLoginRequiredMixin
+from django.contrib import messages
+from django.shortcuts import redirect
+import json
+from django.http import HttpResponse
+from django.urls import reverse
+from django.core.exceptions import PermissionDenied
 
 class SyncMatchPointsView(View):
 
@@ -63,6 +69,7 @@ class SyncMatchPointsView(View):
         match_score.save()
 
 
+
 class MyTeamView(CustomLoginRequiredMixin,DetailView):
     model = FantasyTeam
     template_name = 'fantasy/points.html'
@@ -84,3 +91,39 @@ class LeaderBoard(ListView):
 class ArticleDetailView(DetailView):
     model = Article
     template_name = 'fantasy/article.html'
+
+
+class CreateFantasyTeam(CustomLoginRequiredMixin, View):
+    
+    def get(self, request, *args, **kwargs):
+        context = {
+            'players': Player.objects.all()
+        }
+        return render(request, 'fantasy/create_team.html', context)
+    
+    def post(self, request, *args, **kwargs):
+        if self.request.user.fantasyteam.all():
+            messages.error(self.request, 'You already have a team and cannot create another.')
+            redirect_url = reverse('fantasy:my-team-overall', kwargs={'pk': self.request.user.fantasyteam.first().pk})
+            return JsonResponse({
+                'error': 'You already have a team and cannot create another.',
+                'redirect_url': redirect_url
+            })
+        data = json.loads(self.request.body)
+        if data['teamName'] and data['players']:
+            obj = FantasyTeam.objects.create(
+                name= data['teamName'],
+                user = self.request.user,
+                active_week = MatchWeek.get_active_week()
+            )
+
+            for player in data['players']:
+                obj.players.add(Player.objects.get(pk=player))
+
+            messages.success(self.request, 'Your team was created successfully.')
+            redirect_url = reverse('fantasy:my-team-overall', kwargs={'pk': obj.pk})
+            return JsonResponse({
+                'message': 'Your team was created successfully.',
+                'redirect_url': redirect_url
+            })
+        raise PermissionDenied

@@ -8,4 +8,5 @@ urlpatterns = [
     path('my-team/<int:pk>/points', MyTeamView.as_view(), name='my-team-overall'),
     path('leaderboard/', LeaderBoard.as_view(), name='overall-leaderboard'),
     path('fantasy/<int:pk>/article/', ArticleDetailView.as_view(), name='article-detail'),
+    path('create/my-team/', CreateFantasyTeam.as_view(), name='create-team'),
 ]

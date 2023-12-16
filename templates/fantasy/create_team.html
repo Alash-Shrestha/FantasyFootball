@@ -1,0 +1,217 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
+
+{% endblock %}
+
+{% block content %}
+
+
+<div id="container" class="container">
+    <div id="player-list">
+        <div class="form-group">
+            <label for="teamNameInput">Team Name</label>
+            <input type="text" class="form-control" id="teamNameInput" placeholder="Enter team name...">
+        </div>
+      <h2>Player List</h2>
+      
+      <input type="text" id="searchInput" placeholder="Search players..." />
+      <ul id="players-list">
+        {% for player in players %}
+        <li data-value="{{player.pk}}">{{player}}<button class="add-player-btn">+</button></li>
+        {% endfor %}
+      </ul>
+      <button id="submitBtn">Submit</button>
+    </div>
+
+    
+    <div id="football-field">
+        
+    </div>
+  </div>
+
+   
+
+
+{% endblock content %}
+
+
+{% block script %}
+<script src="{% static 'js/script.js' %}"></script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+  const footballField = document.getElementById("football-field");
+  const submitBtn = document.getElementById("submitBtn");
+  const addPlayerBtns = document.querySelectorAll(".add-player-btn");
+  const searchInput = document.getElementById("searchInput");
+
+  const selectedPlayers = {};
+  let availablePositions = [1, 2, 3, 4, 5];
+
+  addPlayerBtns.forEach((btn) => {
+    btn.addEventListener("click", function () {
+      const playerItem = btn.parentNode;
+      const playerName = playerItem.textContent.trim();
+      const playerValue = playerItem.getAttribute('data-value');
+
+      if (Object.keys(selectedPlayers).length >= 5) {
+        alert("You can only select up to 5 players.");
+        return;
+      }
+
+      if (selectedPlayers[playerValue]) {
+        alert("You have already selected this player.");
+        return;
+      }
+
+      const nextPosition = availablePositions.shift();
+
+      selectedPlayers[playerValue] = { name: playerName, position: nextPosition };
+
+      updateFootballField();
+    });
+  });
+
+  function updateFootballField() {
+    footballField.innerHTML = "";
+    Object.keys(selectedPlayers).forEach((playerValue) => {
+      const player = selectedPlayers[playerValue];
+      const playerElement = createPlayerElement(player.name, player.position);
+      footballField.appendChild(playerElement);
+    });
+  }
+
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+  }
+
+  const csrftoken = getCookie('csrftoken');
+
+  submitBtn.addEventListener("click", function () {
+    const teamName = teamNameInput.value.trim();
+    const selectedPlayerValues = Object.keys(selectedPlayers);
+
+    if (!teamName) {
+      alert("Please enter a team name.");
+      return;
+    }
+
+    if (selectedPlayerValues.length != 5) {
+      alert("Please select 5 players.");
+      return;
+    }
+
+    const submissionData = {
+      teamName: teamName,
+      players: selectedPlayerValues
+    };
+
+    fetch(`{% url 'fantasy:create-team' %}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrftoken
+      },
+      body: JSON.stringify(submissionData),
+    })
+    .then(response => response.json())
+    .then(data => {
+      window.location = data.redirect_url
+    })
+    .catch((error) => {
+      alert('Error:', error);
+    });
+
+    // alert("Submission Data: " + JSON.stringify(submissionData));
+  });
+
+  searchInput.addEventListener("input", function () {
+    const searchText = searchInput.value.toLowerCase();
+    const allPlayers = Array.from(document.querySelectorAll("#players-list li"));
+
+    allPlayers.forEach((player) => {
+      const playerName = player.textContent.toLowerCase();
+      if (playerName.includes(searchText)) {
+        player.style.display = "flex";
+      } else {
+        player.style.display = "none";
+      }
+    });
+  });
+
+  function createPlayerElement(name, position) {
+    const playerElement = document.createElement("div");
+    playerElement.className = "player";
+
+    const initials = name
+      .split(" ")
+      .map((part) => part.charAt(0).toUpperCase())
+      .join("");
+
+    playerElement.textContent = initials;
+
+    const fullNameDiv = document.createElement("div");
+    fullNameDiv.textContent = name;
+    fullNameDiv.className = "full-name";
+    playerElement.appendChild(fullNameDiv);
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.className = "delete-btn";
+    deleteBtn.textContent = "x";
+    deleteBtn.addEventListener("click", function () {
+      footballField.removeChild(playerElement);
+
+      const deletedPosition = selectedPlayers[name].position;
+      availablePositions.push(deletedPosition);
+
+
+      delete selectedPlayers[name];
+    });
+
+    playerElement.appendChild(deleteBtn);
+
+    switch (position) {
+      case 1:
+        playerElement.style.left = "50%";
+        playerElement.style.top = "10px";
+        break;
+      case 2:
+        playerElement.style.left = "25%";
+        playerElement.style.top = "30%";
+        break;
+      case 3:
+        playerElement.style.left = "75%";
+        playerElement.style.top = "30%";
+        break;
+      case 4:
+        playerElement.style.left = "50%";
+        playerElement.style.top = "60%";
+        break;
+      case 5:
+        playerElement.style.left = "50%";
+        playerElement.style.top = "80%";
+        break;
+    }
+
+    return playerElement;
+  }
+});
+
+</script>
+
+{% endblock %}
