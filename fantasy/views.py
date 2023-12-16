@@ -12,6 +12,11 @@ import json
 from django.http import HttpResponse
 from django.urls import reverse
 from django.core.exceptions import PermissionDenied
+from django.db.models import Sum
+
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class SyncMatchPointsView(View):
 
@@ -70,9 +75,48 @@ class SyncMatchPointsView(View):
 
 
 
-class MyTeamView(CustomLoginRequiredMixin,DetailView):
+class MyTeamView(CustomLoginRequiredMixin, DetailView):
     model = FantasyTeam
     template_name = 'fantasy/points.html'
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        active_week = self.get_object().active_week.week
+        context['game_weeks'] = MatchWeek.objects.filter(week__gte=active_week)
+
+        # Get the selected game week from the request or use the active week
+        selected_week_id = self.request.GET.get('gw')
+        if selected_week_id:
+            selected_week = MatchWeek.objects.get(pk=selected_week_id)
+        else:
+            selected_week = self.object.active_week
+        context['selected_week_id'] = selected_week_id
+
+        context['player_and_points'] = self.get_player_points(selected_week)
+        return context
+
+    def get_player_points(self, week):
+        team_players = self.object.players.all()
+
+        if week:
+            match_scores = MatchScore.objects.filter(
+                match__week=week,
+                player__in=team_players
+            )
+        else:
+            # Sum the scores from the active week onwards
+            match_scores = MatchScore.objects.filter(
+                match__week__gte=self.object.active_week,
+                player__in=team_players
+            )
+
+        player_points = match_scores.values(
+            'player__name'
+        ).annotate(
+            total_points=Sum('score')
+        ).order_by('player__name')
+
+        return {item['player__name']: item['total_points'] for item in player_points}
 
 
 class LeaderBoard(ListView):
