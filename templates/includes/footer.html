@@ -10,7 +10,7 @@
                 <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
                     <h5 class="mb-4 font-weight-bold">Links</h5>
                     <p><a href="{% url 'accounts:about' %}" class="text-dark">About</a></p>
-                    <p><a class="text-dark" href="{% if user.is_authenticated %}{% url 'fantasy:my-team-overall' request.user.fantasyteam.first.pk %}{% else %}{% url 'accounts:login' %}{% endif %}">My Team</a></p>
+                    <p><a class="text-dark" href="{% if request.user.is_authenticated %}{% if not request.user.fantasyteam.first %}{% url 'fantasy:create-team' %}{% else %}{% url 'fantasy:my-team-overall' request.user.fantasyteam.first.pk %}{% endif %}{% else %}{% url 'accounts:login' %}{% endif %}">My Team</a></p>
                     <p><a class="text-dark" href="{% url 'fantasy:overall-leaderboard' %}">Leaderboard</a></p>
                     
                 

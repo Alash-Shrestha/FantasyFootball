@@ -11,7 +11,7 @@
                 <a class="nav-item nav-link" href="{% url 'accounts:edit_profile' %}">Profile</a>
                 {% endif %}
                 
-                <a class="nav-item nav-link" href="{% if user.is_authenticated %}{% if request.user.fantasyteam.all %}{% url 'fantasy:my-team-overall' request.user.fantasyteam.first.pk %}{% else %}{% url 'fantasy:create-team' request.user.fantasyteam.first.pk %}{% endif %}{% else %}{% url 'accounts:login' %}{% endif %}">My Team</a>
+                <a class="nav-item nav-link" href="{% if request.user.is_authenticated %}{% if not request.user.fantasyteam.first %}{% url 'fantasy:create-team' %}{% else %}{% url 'fantasy:my-team-overall' request.user.fantasyteam.first.pk %}{% endif %}{% else %}{% url 'accounts:login' %}{% endif %}">My Team</a>
                 <a class="nav-item nav-link" href="{% url 'fantasy:overall-leaderboard' %}">Leaderboard</a>
                 <a class="nav-item nav-link" href="{% url 'accounts:about' %}">About</a>
             
