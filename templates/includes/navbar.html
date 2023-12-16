@@ -12,7 +12,7 @@
                 {% endif %}
                 
                 <a class="nav-item nav-link" href="{% if user.is_authenticated %}{% url 'fantasy:my-team-overall' request.user.fantasyteam.first.pk %}{% else %}{% url 'accounts:login' %}{% endif %}">My Team</a>
-                <a class="nav-item nav-link" href="">Players</a>
+                <a class="nav-item nav-link" href="{% url 'fantasy:overall-leaderboard' %}">Leaderboard</a>
                 <a class="nav-item nav-link" href="{% url 'accounts:about' %}">About</a>
             
                 {% if user.is_authenticated %}

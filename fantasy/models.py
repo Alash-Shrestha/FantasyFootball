@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from core.models import DateModel
 from django.db.models import Sum
+from django.urls import reverse
 
 User = get_user_model()
 
@@ -11,6 +12,9 @@ class MatchWeek(DateModel):
 
     def __str__(self):
         return str(self.week)
+    
+    class Meta:
+        ordering= ('-created_at',)
     
     @classmethod
     def get_active_week(cls):
@@ -43,6 +47,11 @@ class FantasyTeam(DateModel):
 
     def __str__(self):
         return f"{self.name} - {self.user.full_name}"
+
+    def get_absolute_url(self):
+        return reverse('fantasy:my-team-overall', kwargs={
+            'pk': self.pk
+        })
     
     def player_and_points(self):
         if not self.active_week:
@@ -67,6 +76,9 @@ class FantasyTeam(DateModel):
         print('point dict: ',player_points_dict)
 
         return player_points_dict
+    
+    class Meta:
+        ordering = ('-points',)
 
 class Match(DateModel):
     week = models.ForeignKey(MatchWeek, null=True, blank=True, on_delete=models.CASCADE)
@@ -122,5 +134,11 @@ class Article(DateModel):
         if self.image:
             return self.image.url
         return 'https://assets.gopromotional.co.uk/images/article-placeholder.jpg'
+    
+    def get_absolute_url(self):
+        return reverse('fantasy:article-detail', 
+                       kwargs={
+                           'pk':self.pk
+                       })
     
     

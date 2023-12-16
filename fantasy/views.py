@@ -1,8 +1,11 @@
+from typing import Any
+from django.db.models.query import QuerySet
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views import View
-from .models import Match, MatchPointMapper, MatchWeek, MatchScore, FantasyTeam
-from django.views.generic import DetailView
+from .models import Match, MatchPointMapper, MatchWeek, MatchScore, FantasyTeam, Article
+from django.views.generic import DetailView, ListView
+from core.mixins import CustomLoginRequiredMixin
 
 class SyncMatchPointsView(View):
 
@@ -60,7 +63,24 @@ class SyncMatchPointsView(View):
         match_score.save()
 
 
-class MyTeamView(DetailView):
+class MyTeamView(CustomLoginRequiredMixin,DetailView):
     model = FantasyTeam
     template_name = 'fantasy/points.html'
 
+
+class LeaderBoard(ListView):
+    model = FantasyTeam
+    template_name = 'fantasy/leaderboard.html'
+
+    def get_queryset(self) -> QuerySet[Any]:
+        print(super().get_queryset())
+        print('all')
+        if not self.request.user.is_authenticated:
+            return super().get_queryset().filter(deleted_at=None)[:5]
+        else:
+            return super().get_queryset().filter(deleted_at=None)[:25]
+        
+
+class ArticleDetailView(DetailView):
+    model = Article
+    template_name = 'fantasy/article.html'

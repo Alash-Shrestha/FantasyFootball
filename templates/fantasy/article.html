@@ -1,0 +1,15 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2 text-center">
+            <h2 class="mb-4">{{ article.title|safe }}</h2>
+     
+                <img src="{{ article.title_photo }}" alt="{{ article.title|safe }}" class="img-fluid">
+         
+            <p class="mt-3">{{ article.description|safe }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

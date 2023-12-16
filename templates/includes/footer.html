@@ -10,8 +10,10 @@
                 <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
                     <h5 class="mb-4 font-weight-bold">Links</h5>
                     <p><a href="{% url 'accounts:about' %}" class="text-dark">About</a></p>
-                    <p><a href="" class="text-dark">Teams</a></p>
-                    <p><a href="" class="text-dark">Players</a></p>
+                    <p><a class="text-dark" href="{% if user.is_authenticated %}{% url 'fantasy:my-team-overall' request.user.fantasyteam.first.pk %}{% else %}{% url 'accounts:login' %}{% endif %}">My Team</a></p>
+                    <p><a class="text-dark" href="{% url 'fantasy:overall-leaderboard' %}">Leaderboard</a></p>
+                    
+                
                 </div>
 
                 <!-- Add more columns as needed -->

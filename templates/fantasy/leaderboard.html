@@ -1,0 +1,59 @@
+{% extends 'layouts/base.html' %}
+
+{% block head %}
+<style>
+    .table thead th {
+        vertical-align: bottom;
+        border-bottom: 2px solid #dee2e6;
+    }
+    .table td, .table th {
+        padding: .75rem;
+        vertical-align: top;
+        border-top: 1px solid #dee2e6;
+    }
+    .table-hover tbody tr:hover {
+        color: #212529;
+        background-color: rgba(0,0,0,.075);
+    }
+    .bi {
+        vertical-align: -.125em;
+        fill: currentColor;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">Fantasy League Leaderboard</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col"><i class="bi bi-people-fill"></i> Team Name</th>
+                    <th scope="col"><i class="bi bi-person-badge-fill"></i> Manager Name</th>
+                    <th scope="col"><i class="bi bi-trophy-fill"></i> Points</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for team in object_list %}
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>
+                        <a href="{{ team.get_absolute_url }}">{{ team.name }}</a>
+                    </td>
+                    <td>{{ team.user.full_name }}</td>
+                    <td>{{ team.points }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center">No teams found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+{% endblock %}
